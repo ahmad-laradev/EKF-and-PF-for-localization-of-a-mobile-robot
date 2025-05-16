@@ -1,56 +1,34 @@
-# EKF and PF for Localization of a Mobile Robot
+# filters
 
-This project is about implementing and comparing two important filters used in mobile robot localization: the Extended Kalman Filter (EKF) and the Particle Filter (PF). Both filters are used to estimate the robot’s position and orientation while it moves in a 2D world with noise in both its actions and its observations.
+The starter code is written in Python and depends on NumPy and Matplotlib.
+This README gives a brief overview of each file.
 
-We worked in Python and tested the filters in a simple simulated environment using noisy control inputs and landmark-based observations.
+- `localization.py` -- This is your main entry point for running experiments.
+- `soccer_field.py` -- This implements the dynamics and observation functions, as well as the noise models for both. Add your Jacobian implementations here!
+- `utils.py` -- This contains assorted plotting functions, as well as a useful
+  function for normalizing angles.
+- `policies.py` -- This contains a simple policy, which you can safely ignore.
+- `ekf.py` -- Add your extended Kalman filter implementation here!
+- `pf.py` -- Add your particle filter implementation here!
 
-## Project Structure
+## Command-Line Interface
 
-- `ekf.py`: Our implementation of the Extended Kalman Filter.
-- `pf.py`: Our implementation of the Particle Filter, including low-variance resampling.
-- `soccer_field.py`: The simulation environment with landmark definitions, motion and observation models, and noise settings.
-- `utils.py`: Helper functions for plotting and angle normalization.
-- `localization.py`: The main script to run the simulation and apply the filters.
-- `run_experiments.py`: A script to automate experiments and collect results.
-
-## How to Run
-
-To simulate the robot and see the filter estimates in action, you can run:
-
+To visualize the robot in the soccer field environment, run
 ```bash
-python localization.py --plot --filter-type ekf
-python localization.py --plot --filter-type pf
-python localization.py --plot --filter-type none
+$ python localization.py --plot none
+```
+The blue line traces out the robot's position, which is a result of noisy actions.
+The green line traces the robot's position assuming that actions weren't noisy.
+
+After you implement a filter, the filter's estimate of the robot's position will be drawn in red.
+```bash
+$ python localization.py --plot ekf
+$ python localization.py --plot pf
 ```
 
-To check all available options:
-
+You can scale the noise factors for the data generation process or the filters
+with the `--data-factor` and `--filter-factor` flags. To see other command-line
+flags available to you, run
 ```bash
-python localization.py -h
+$ python localization.py -h
 ```
-
-## Input Format
-
-- **State**: `[x, y, θ]` — robot’s position and orientation.
-- **Control**: `[δrot1, δtrans, δrot2]` — turn, move, turn again.
-- **Observation**: `[θ_bearing]` — angle to a visible landmark.
-
-## Notes
-
-- Always use `utils.minimized_angle()` to keep angles between -π and π.
-- The PF uses low-variance resampling for better performance.
-- For large experiments, we recommend turning off plotting to save time.
-
-## What We Did
-
-We implemented both filters from scratch, tested them under different levels of noise, and compared their performance. We measured the accuracy using position error, ANEES, and Mahalanobis error. For the Particle Filter, we also checked how the number of particles affects the results.
-
-The EKF worked well in low-noise settings, while the PF handled more difficult situations better. PF needs more particles to work well and runs slower, but it's more flexible overall.
-
-This project helped us understand how filtering works for localization in robotics, especially when dealing with real-world uncertainty.
-
-## References
-
-- Thrun, S., Burgard, W., & Fox, D. (2005). *Probabilistic Robotics*. MIT Press.
-- Class slides and TP4 instructions
-- NumPy and Matplotlib official docs
